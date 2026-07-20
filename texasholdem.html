@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Texas Hold 'Em by Paul Ghayad</title>
+</head>
+<body>
+	<h1>Welcome to Texas 'Hold Em!</h1>
+	<div>
+		<p>
+			<span><b>User Hand: </b><em>CPU Hand: </em></span>
+		</p>
+	</div>
+<script>
+/*
+	July 20th, 2026
+	15:15
+	Deptford, NJ Starbucks
+
+	Texas Hold 'Em
+	by Paul Ghayad
+	Software Engineer
+	*I am a software engineer because I build software.
+	*Present-tense
+
+	To Do:
+		-head to head game
+		-setup
+			-deal 2 cards to the User and 2 to the CPU
+			-small blind / big blind : $1 / $3
+			-
+		-logic of the CPU
+			bet, fold, check, call, raise, re-raise
+			how to make it both random and calculated?
+
+		-logic of the User
+			bet, fold, check, call, raise, re-raise
+
+		----ADVANCED---
+		-calculate win probability
+*/
+
+let deck = [], handUser = [], handCPU = [];
+let board = [];
+let chipsUser = 100, chipsCPU = 100;
+let ranks = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
+let suits = ['s', 'd', 'h', 'c'];
+let onButton = false;
+let stage = 0;	//0 - preflop; 1 - flop; 2 - turn; 3 - river
+
+/*
+	Create the deck, assign the chip values, 
+	deal the cards to the players, 
+*/
+function dealHand(){
+	for(let i = 0; i < suits.length; i++){
+		for(let j = 0; j < ranks.length; j++){
+			deck.push(ranks[j] + suits[i])
+		}
+	}
+	console.log("deck: ", deck);
+
+	//deal all 4 cards from random indices in the deck
+	let randomIndex = Math.floor(Math.random() * deck.length);
+	const cardUser1 = deck.splice(randomIndex, 1)[0];
+	randomIndex = Math.floor(Math.random() * deck.length);
+	const cardUser2 = deck.splice(randomIndex, 1)[0];
+	randomIndex = Math.floor(Math.random() * deck.length);
+	const cardCPU1 = deck.splice(randomIndex, 1)[0];
+	randomIndex = Math.floor(Math.random() * deck.length);
+	const cardCPU2 = deck.splice(randomIndex, 1)[0];
+	
+	//add cards to hand
+	handUser.push(cardUser1);
+	handUser.push(cardUser2);
+	handCPU.push(cardCPU1);
+	handCPU.push(cardCPU2);
+	
+	console.log(handUser + " , " + handCPU);
+}
+
+function decisionUser(stage, decisionCPU){
+	let decisionUser = "";
+
+	if(stage == 0 && onButton){
+		decisionUser = prompt("1-fold; 2-call; 3-raise")
+	}else if(stage == 1 && onButton){
+
+	}else if(stage == 2 && onButton){
+		
+	}else if(stage == 3 && onButton){
+
+	}else{
+		console.log("waiting for CPU decision...")
+		if(stage == 0){
+			if(decisionCPU == 1){
+				alert("Hand complete!")
+			}else if(decisionCPU == 2){
+				decisionUser = prompt("1-fold; 2-check; 3-raise")
+			}else if(decisionCPU == 3){
+				decisionUser = prompt("1-fold; 2-call; 3-reraise")
+			}
+		} else if(stage == 1){
+			decisionUser = prompt("1-fold; 2-check; 3-bet")
+			decisionCPU();
+		} else if(stage == 2){
+			decisionUser = prompt("1-fold; 2-check; 3-bet")
+			decisionCPU();
+		} else {
+			decisionUser = prompt("1-fold; 2-check; 3-bet")
+			decisionCPU();
+		}
+	}
+	
+}
+
+/*
+	Combination of basic and advanced logic
+		this is the fun part, keep it interesting
+*/
+function decisionCPU(){
+	let rank1 = handCPU[0][0];
+	console.log(rank1);
+	
+	if(handCPU[0][0] == 'A' && handCPU[1][0] == 'A'){
+		alert('CPU raises!')
+	}
+
+	console.log("Hand CPU: " + handCPU);
+}
+
+function showFlop(){
+	let randomIndex = Math.floor(Math.random() * deck.length);
+	const flop1 = deck.splice(randomIndex, 1)[0];
+	randomIndex = Math.floor(Math.random() * deck.length);
+	const flop2 = deck.splice(randomIndex, 1)[0];
+	randomIndex = Math.floor(Math.random() * deck.length);
+	const flop3 = deck.splice(randomIndex, 1)[0];
+
+	//add cards to hand
+	board.push(flop1);
+	board.push(flop2);
+	board.push(flop3);
+	console.log("Board: " + board);
+}
+
+function showTurn(){
+	let randomIndex = Math.floor(Math.random() * deck.length);
+	const turn = deck.splice(randomIndex, 1)[0];
+	board.push(turn);
+	console.log("Board: " + board);
+}
+
+function showRiver(){
+	let randomIndex = Math.floor(Math.random() * deck.length);
+	const river = deck.splice(randomIndex, 1)[0];
+	board.push(river);
+	console.log("Board: " + board);
+}
+
+function playAgain(){
+	let decision = prompt("1-play again; 2 - exit");
+
+	if(decision == 1){
+
+	}else{
+		alert("Game Over")
+	}
+}
+
+dealHand();
+
+//test
+showFlop()
+
+//test
+showTurn()
+
+//test
+showRiver()
+
+decisionCPU();
+</script>
+</body>
+</html>

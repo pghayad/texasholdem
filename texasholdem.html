@@ -7,14 +7,19 @@
 	<h1>Welcome to Texas 'Hold Em!</h1>
 	<div>
 		<p>
-			<span><b>User Hand: </b><em>CPU Hand: </em></span>
+			<p id="msg1">Message 1</p>
+			<p id="msg2">Message 2</p>
+			<p id="msg3">Message 3</p>
+			<span><b id="handUser">User Hand: </b><em id="handCPU">CPU Hand: </em></span>
 		</p>
 	</div>
 <script>
 /*
+	Day 1
 	July 20th, 2026
 	15:15
 	Deptford, NJ Starbucks
+	DURATION: ~2 hours
 
 	Texas Hold 'Em
 	by Paul Ghayad
@@ -37,15 +42,23 @@
 
 		----ADVANCED---
 		-calculate win probability
+
+Day 2
+	July 22th, 2026
+	10:37
+	Deptford, NJ Starbucks
+
 */
 
 let deck = [], handUser = [], handCPU = [];
 let board = [];
-let chipsUser = 100, chipsCPU = 100;
+let pot = 0, chipsUser = 100, chipsCPU = 100;
 let ranks = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
 let suits = ['s', 'd', 'h', 'c'];
 let onButton = false;
 let stage = 0;	//0 - preflop; 1 - flop; 2 - turn; 3 - river
+let decision = "";
+let playAgain = false;
 
 /*
 	Create the deck, assign the chip values, 
@@ -116,17 +129,54 @@ function decisionUser(stage, decisionCPU){
 /*
 	Combination of basic and advanced logic
 		this is the fun part, keep it interesting
+
+		TO DO: need better way to match the ranks
 */
 function decisionCPU(){
 	let rank1 = handCPU[0][0];
 	console.log(rank1);
 	
-	if(handCPU[0][0] == 'A' && handCPU[1][0] == 'A'){
-		alert('CPU raises!')
-	}
+	//big pocket pair: Raise
+	//TO DO: change probability; that is, CPU shouldn't always raise
 
-	console.log("Hand CPU: " + handCPU);
+	if((handCPU[0][0] == 'A' && handCPU[1][0] == 'A') || (handCPU[0][0] == 'K' && handCPU[1][0] == 'K') ||
+		(handCPU[0][0] == 'Q' && handCPU[1][0] == 'Q') || (handCPU[0][0] == 'J' && handCPU[1][0] == 'J')
+		(handCPU[0][0] == 'T' && handCPU[1][0] == 'T')){
+		console.log('high pocket pair')
+		if(chipsCPU <= 20){
+			console.log('CPU goes all-in! $' + chipsCPU);
+			pot += chipsCPU;
+			//decisionUser();
+		}else{
+
+		}
+		
+		//suited connectors: Raise
+	}else if((handCPU[0][0] == '9' && handCPU[1][0] == '8' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == '9' && handCPU[1][0] == 'T' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == 'T' && handCPU[1][0] == '9' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == '8' && handCPU[1][0] == '9' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == '9' && handCPU[1][0] == '8' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == '8' && handCPU[1][0] == '7' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == '7' && handCPU[1][0] == '8' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == 'T' && handCPU[1][0] == 'J' && handCPU[0][1] == handCPU[1][1]) || 
+		(handCPU[0][0] == 'J' && handCPU[1][0] == 'T' && handCPU[0][1] == handCPU[1][1]) ){
+		console.log('CPU raises!');
+	}else if(handCPU[0][0] == '2' && handCPU[1][0] == '7' || handCPU[0][0] == '7' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == '5' || handCPU[0][0] == '5' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == '9' || handCPU[0][0] == '9' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == 'T' || handCPU[0][0] == 'T' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == '3' || handCPU[0][0] == '3' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == '4' || handCPU[0][0] == '4' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == '6' || handCPU[0][0] == '6' && handCPU[1][0] == '2'
+		|| handCPU[0][0] == '2' && handCPU[1][0] == 'J' || handCPU[0][0] == 'J' && handCPU[1][0] == '2'){
+
+		console.log('CPU folds...you win!');
+
+		console.log("Hand CPU: " + handCPU);
+	}//else if()
 }
+		
 
 function showFlop(){
 	let randomIndex = Math.floor(Math.random() * deck.length);
@@ -158,27 +208,35 @@ function showRiver(){
 }
 
 function playAgain(){
-	let decision = prompt("1-play again; 2 - exit");
+	decision = prompt("1-play again; 2 - exit");
 
 	if(decision == 1){
-
+		return true;
 	}else{
 		alert("Game Over")
+		return false;
 	}
 }
 
-dealHand();
 
-//test
-showFlop()
+playAgain = true;
 
-//test
-showTurn()
+while(playAgain){
+	dealHand();
 
-//test
-showRiver()
+	//test
+	showFlop()
 
-decisionCPU();
+	//test
+	showTurn()
+
+	//test
+	showRiver()
+
+	decisionCPU();
+
+	playAgain = playAgain();
+}
 </script>
 </body>
 </html>
